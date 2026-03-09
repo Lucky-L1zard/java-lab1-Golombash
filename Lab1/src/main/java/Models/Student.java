@@ -1,5 +1,6 @@
 package Models;
 
+import javax.naming.NameNotFoundException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.HashMap;
@@ -46,6 +47,11 @@ public class Student {
     public void addDiscipline(Discipline discipline) {
         this.disciplines.add(discipline);
     }
+
+    public boolean DeleteDisciplineByName(String disciplineName) {
+        return this.disciplines.removeIf(dis -> dis.getName().equals(disciplineName));
+    }
+
 
     public String getFirstName() {
         return firstName;
