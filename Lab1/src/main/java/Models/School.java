@@ -28,6 +28,11 @@ School {
         this.students.add(student);
     }
 
+    public boolean deleteStudentByNameAndSecondName(String studentName, String studentSecondName) {
+        return students.removeIf(student -> student.getFirstName().equalsIgnoreCase(studentName)
+                && student.getSecondName().equalsIgnoreCase(studentSecondName));
+    }
+
     public String getName() {
         return name;
     }

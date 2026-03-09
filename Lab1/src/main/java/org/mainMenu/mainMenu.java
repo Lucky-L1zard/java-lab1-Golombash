@@ -32,7 +32,7 @@ public class mainMenu {
                 String choice = inputScanner.nextLine();
 
                 switch (choice) {
-                    case "1": // Додати студента
+                    case "1":
                         System.out.print("Ім'я школяра: ");
                         String firstName = inputScanner.nextLine();
                         System.out.print("Прізвище школяра: ");
@@ -41,7 +41,19 @@ public class mainMenu {
                         System.out.println("Школяра додано успішно.");
                         break;
 
-                    case "2": // Додати дисципліну студенту
+                    case "2":
+                        System.out.print("Ім'я школяра: ");
+                        String sFirstName = inputScanner.nextLine();
+                        System.out.print("Прізвище школяра: ");
+                        String sLastName = inputScanner.nextLine();
+                        if (school.deleteStudentByNameAndSecondName(sFirstName, sLastName)) {
+                            System.out.println("Школяра видалено успішно.");
+                        } else {
+                            System.out.println("Школяра з введеними данними не знайдено");
+                        }
+                        break;
+
+                    case "3":
                         Student sForDisc = findStudentFlow(school, inputScanner);
                         if (sForDisc != null) {
                             System.out.print("Назва нової дисципліни: ");
@@ -50,7 +62,7 @@ public class mainMenu {
                             System.out.println("Дисципліну додано.");
                         }
                         break;
-                    case "3": // Видалитити дисципліну студенту
+                    case "4":
                         Student sForDelDisc = findStudentFlow(school, inputScanner);
                         if (sForDelDisc != null) {
                             System.out.print("Назва дисципліни для видалення: ");
@@ -65,7 +77,7 @@ public class mainMenu {
                         }
                         break;
 
-                    case "4": // Виставити оцінку за тест (Take Test)
+                    case "5":
                         Student sForTest = findStudentFlow(school, inputScanner);
                         if (sForTest != null) {
                             System.out.print("Назва дисципліни для тесту: ");
@@ -83,16 +95,16 @@ public class mainMenu {
                         }
                         break;
 
-                    case "5": // Вивести всю інформацію
+                    case "6":
                         System.out.println("\n--- ПОТОЧНИЙ СТАН ШКОЛИ ---");
                         System.out.println(school.toString());
                         break;
 
-                    case "6": // Експорт (сортування вбудовано в FileHandler)
+                    case "7":
                         fileHandler.exportToCSV(school, "school_data.csv");
                         break;
 
-                    case "7": // Імпорт
+                    case "8":
                         School imported = fileHandler.importFromCSV("school_data.csv");
                         if (imported != null) {
                             school = imported;
@@ -120,12 +132,13 @@ public class mainMenu {
         System.out.println("   Меню");
         System.out.println("===========================");
         System.out.println("1. Додати школяра");
-        System.out.println("2. Додати дисципліну школяру");
-        System.out.println("3. Видалиити дисципліну школяру");
-        System.out.println("4. Виставити оцінку (Тест)");
-        System.out.println("5. Показати всіх школярів та бали");
-        System.out.println("6. Зберегти дані (Експорт + Сортування)");
-        System.out.println("7. Завантажити дані (Імпорт)");
+        System.out.println("2. Видалити школяра");
+        System.out.println("3. Додати дисципліну школяру");
+        System.out.println("4. Видалиити дисципліну школяру");
+        System.out.println("5. Виставити оцінку (Тест)");
+        System.out.println("6. Показати всіх школярів та бали");
+        System.out.println("7. Зберегти дані (Експорт + Сортування)");
+        System.out.println("8. Завантажити дані (Імпорт)");
         System.out.println("0. Вихід");
     }
 
