@@ -10,43 +10,45 @@ import java.util.Comparator;
 
 public class FileHandler {
 
-    // Експорт у форматі CSV: Ім'я,Прізвище,Дисципліна1:Оцінка1;Дисципліна2:Оцінка2
-    public void exportToCSV(School school, String fileName){
-        // Сортування за прізвищем
-        school.getListOfStudents().sort(Comparator.comparing(s->s.getSecondName()));
+    public void exportToCSV(School school, String fileName) {
+        // Сортування за прізвищем перед записом
+        school.getListOfStudents().sort(Comparator.comparing(student->student.getSecondName()));
+
         try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write(school.getName() + "\n");
+
             for (Student student : school.getListOfStudents()) {
                 StringBuilder content = new StringBuilder();
                 content.append(student.getFirstName()).append(",")
                         .append(student.getSecondName()).append(",");
 
-                ArrayList<Discipline> currentStudentDisciplines = student.getLisOfDisciplines();
-                for (int i = 0; i < currentStudentDisciplines.size(); i++) {
-                    content.append(currentStudentDisciplines.get(i).getName()).append(":")
-                            .append(currentStudentDisciplines.get(i).getGrade());
-                    if (i < currentStudentDisciplines.size() - 1) content.append(";");
+                ArrayList<Discipline> disciplines = student.getLisOfDisciplines();
+                for (int i = 0; i < disciplines.size(); i++) {
+                    content.append(disciplines.get(i).getName()).append(":")
+                            .append(disciplines.get(i).getGrade());
+                    if (i < disciplines.size() - 1) content.append(";");
                 }
-
                 writer.write(content.toString() + "\n");
             }
-            System.out.println("Дані успішно експортовано у " + fileName);
+            System.out.println("Дані школи '" + school.getName() + "' експортовано у " + fileName);
         } catch (IOException e) {
-            System.out.println("Сталася помилка при записі у файл: " + e.getMessage());
+            System.out.println("Помилка запису: " + e.getMessage());
         }
     }
 
-    // Імпорт з CSV
-    public School importFromCSV(String fileName, String schoolName){
-        School school = new School(schoolName);
+    public School importFromCSV(String fileName) {
         File file = new File(fileName);
-
-        if (!file.exists()) try {
-            throw new FileNotFoundException("Файл не знайдено!");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+        if (!file.exists()) {
+            System.out.println("Файл не знайдено!");
+            return null;
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String schoolName = reader.readLine();
+            if (schoolName == null) return null;
+
+            School school = new School(schoolName);
+
             String currentLine;
             while ((currentLine = reader.readLine()) != null) {
                 String[] parts = currentLine.split(",");
@@ -54,7 +56,7 @@ public class FileHandler {
 
                 Student student = new Student(parts[0], parts[1]);
 
-                if (parts.length > 2) {
+                if (parts.length > 2 && !parts[2].isEmpty()) {
                     String[] discParts = parts[2].split(";");
                     for (String d : discParts) {
                         String[] nameAndGrade = d.split(":");
@@ -67,9 +69,10 @@ public class FileHandler {
                 }
                 school.addStudent(student);
             }
-        }catch (IOException e) {
-            System.out.println("Сталася помилка при імпорті з файлу: " + e.getMessage());
+            return school;
+        } catch (IOException e) {
+            System.out.println("Помилка імпорту: " + e.getMessage());
+            return null;
         }
-        return school;
     }
 }
